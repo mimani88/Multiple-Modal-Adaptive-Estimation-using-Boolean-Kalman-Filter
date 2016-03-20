@@ -1,4 +1,4 @@
-MMAE_BKS <- function(net,observ,obs_var,correct_model,threshold,max_time) {
+MMAE_BKF <- function(net,observ,obs_var,correct_model,threshold,max_time) {
   
   # Reference: Imani, M., & Braga-Neto, U. "Optimal gene regulatory network inference using the Boolean Kalman  filter and 
   #  multiple model adaptive estimation". In 2015 49th Asilomar Conference on Signals, Systems and Computers (pp. 423-427).IEEE.
