@@ -17,7 +17,7 @@
 
 rm(list=ls(all=TRUE))
 graphics.off()
-source("MMAE_BKS.R")
+source("MMAE_BKF.R")
 source("update.R")
 source("prediction.R")
 source("simulator.R")
@@ -54,4 +54,4 @@ obs_variables <- c(1:4)
 net <- rbind(net_connection,bias)
 threshold <- 0.90  # The threshold for stopping algorithm if one of posterior probabilities exceeds this threshold.  
 max_time <- 200    # Maximum number of time steps for stopping the algorithm if the posterior probability of none of models exceeds the threshold.
-MMAE_BKS(net,observ,obs_variables,correct_model,threshold,max_time) 
+MMAE_BKF(net,observ,obs_variables,correct_model,threshold,max_time) 
