@@ -1,0 +1,78 @@
+simulator <- function(X,pw,net,u_ext,act,observ){
+  if(length(net)==1){  
+  Xp <- ((net_model(X,net)+(runif(length(X)) < pw)*1)==1)*1
+  }
+  if(length(net)>1){  
+    Xp <- ((c(((net%*%(c(X,1))))>0)*1+(runif(length(X)) < pw)*1)==1)*1
+  }
+  if(act<length(u_ext)){
+    Xp[u_ext[act]] <- !Xp[u_ext[act]]*1
+  }
+  if(observ[1]=="direct"){
+    return((list(X=Xp, Y=c())))
+  }
+
+  if(observ[1]==c("Bernoulli")){
+    obs_model <- observ[1]
+    obs_par <-  as.numeric(observ[2:(((length(observ)-1)/2)+1)])
+    obs_var <-  as.numeric(observ[(((length(observ)-1)/2)+2):length(observ)])
+    yy <- ((Xp[obs_var]+(runif(length(obs_par)) < obs_par)*1)==1)*1
+    return((list(X=Xp, Y=yy)))
+  }
+  
+  if(observ[1]==c("NB")){
+    obs_model <- observ[1]
+    obs_par <-  as.numeric(observ[2:(((length(observ)-3)/3)*2+3)])
+    obs_var <-  as.numeric(observ[(((length(observ)-3)/3)*2+4):length(observ)])
+    yy <- c()
+    for(kkl in 1:length(obs_var)){
+      ml <- obs_var[kkl]
+      lam=obs_par[1]*exp(obs_par[2]+obs_par[2+kkl]*Xp[ml])
+      phii <- obs_par[(3+length(obs_var))+kkl-1]
+      yy  <- c(yy,rnbinom(1, size=phii, prob=phii/(phii+lam)))
+    }
+    return((list(X=Xp, Y=yy)))
+  }
+  
+  if(observ[1]==c("Poisson")){
+    obs_model <- observ[1]
+    obs_par <-  as.numeric(observ[2:(((length(observ)-3)/2)*1+3)])
+    obs_var <-  as.numeric(observ[(((length(observ)-3)/2)*1+4):length(observ)])
+    yy <- c()
+    for(kkl in 1:length(obs_var)){
+      ml <- obs_var[kkl]
+      lam=obs_par[1]*exp(obs_par[2]+obs_par[2+kkl]*Xp[ml])
+       yy  <- c(yy,rpois(1, lam))
+    }
+    return((list(X=Xp, Y=yy)))
+  }
+
+  if(observ[1]==c("Gaussian")){
+    obs_par <-  as.numeric(observ[2:(length(observ)-((length(observ)-1)/5))])
+    obs_var <-  as.numeric(observ[(length(observ)-((length(observ)-1)/5)+1):length(observ)])
+    
+    obs_model <- observ[1]
+    obs_par <-  as.numeric(observ[2:(((length(observ)-1)/5)*4+1)])
+    obs_var <-  as.numeric(observ[(((length(observ)-1)/5)*4+2):length(observ)])
+    mu0 <- obs_par[seq(1,length(obs_par)/2,2)]
+    mu1 <- obs_par[seq(2,length(obs_par)/2,2)]
+#      (length(obs_var)+1):(2*length(obs_var))]
+    var0 <- obs_par[seq((length(obs_par)/2+1),length(obs_par),2)]
+      #(2*length(obs_var)+1):(3*length(obs_var))]
+    var1 <- obs_par[seq((length(obs_par)/2+2),length(obs_par),2)]
+      #(3*length(obs_var)+1):(4*length(obs_var))]
+    yy <- c()
+    for(kkl in 1:length(obs_var)){
+      ml <- obs_var[kkl]
+      if(Xp[ml]==0){
+        yy  <- c(yy,rnorm(1, mu0[kkl], var0[kkl]))
+      }
+      if(Xp[ml]==1){
+        yy  <- c(yy,rnorm(1, mu1[kkl], var1[kkl]))
+      }
+    }
+    return((list(X=Xp, Y=yy)))
+  }
+
+  
+}
