@@ -1,0 +1,63 @@
+In this document, the way of using the code for the following paper is explained.
+
+Imani, Mahdi, and Ulisses Braga-Neto. "Optimal gene regulatory network inference using the
+ Boolean Kalman filter and multiple model adaptive estimation." 2015 49th Asilomar Conference
+ on Signals, Systems and Computers. IEEE, 2015.
+
+The code is accessible in website {http://people.tamu.edu/~m.imani88/}.\\
+ 
+
+The function which should be run is
+
+> Net_Inf(net,observ,obs_var,correct_model,threshold,max_time)
+
+The input to the system is as follows:
+1- net
+It refers to the structure of the model; it contains "net_connection", "net_bias" and "process_noise". 
+The unknown part of network connection and bias units should be specified by "?" and different realizations
+ of process noise should is in process noise. For example condidering p53-Mdm2 network in the paper we have:
+
+net_connection <- rbind(c(0,   0,  -1,  0),         # Iput to the first gene
+                        c(+1,  0, "?", -1),         # Iput to the second gene
+                        c(0,  "?", 0, "?")          # Iput to the third gene
+                        c(-1, +1, "?",  0))         # Iput to the fourth gene
+bias <- c(-1/2,-1/2,-1/2,-1/2)   # bias units for genes
+process_noise <- c(0.1,0.15)     # different discrete realizations of process noise
+
+2- observ
+The second input to the function is the observation model. For example, the zero mean gaussian noise 
+with variance 1 for each state 0 or 1 can be modeled as follows:
+
+obs_mean0 <- c(0)        # mean of p(y|x=0
+obs_mean1 <- c(1)        # mean of p(y|x=1) 
+obs_variance <- c(0.1)   # variance of P(y|x)
+observ <- c(obs_mean0,obs_mean1,obs_variance
+
+3-obs_variables 
+The observed variable of states in measurements are defined in this vector.
+
+obs_variables <- c(1:4)   # all four state variables are seen
+
+4- correct_model
+The next input is the information of the correct model which will be used in simulation of data.
+The correct values of unknonw specified parts of net should be defined in this vector in exact order.  
+
+correct_model <-  c(+1, +1, 0, +1,   # correct elements of net_connection
+                  c(),               # correct elements of bias units
+                  process_noise[1], # correct process noise
+                  obs_variance[1]}) # correct variance of observaition noise
+
+5- threshold, max_time
+The method will be stopped if the posterior probability of the inferred model exceeds
+ a pre-specified thresholds, or when the method reaches to the maximum number time steps (max_time).
+
+threshold <- 0.90 
+max_time <-  200  
+
+The output of the function is always the inferred model for the system. The posterior probability of the 
+correct model is also plotted at the end.
+
+>  Net_Inf(net,observ,obs_var,correct_model,threshold,max_time)
+The  model is inferred in 41 Time  Steps.
+The inferred model: 1.0  1.0  0.0  1.0  0.1  0.1 
+
