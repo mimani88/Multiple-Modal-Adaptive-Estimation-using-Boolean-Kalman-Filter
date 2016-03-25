@@ -12,7 +12,7 @@ update <- function(y,A,obs_par,obs_var,obs_model){
   # For more information user is referred to the following articles or my personal website:
   # 1-  Imani, M., & Braga-Neto, U. "Optimal state estimation for boolean dynamical systems using a boolean Kalman smoother." 
   #  In 2015 IEEE Global Conference on Signal and Information Processing (GlobalSIP) (pp. 972-976). IEEE.
-  # 2-  Imani, M., & Braga-Neto, U. "Optimal Intervention Strategy for Boolean Dynamical Systems Observed through RNA-Seq."
+  # 2-  Imani, M., & Braga-Neto, U. "State-Feedback Control of Partially-Observed Boolean Dynamical Systems Using RNA-Seq Time Series Data "
   #  In 2016 IEEE American Control Conference (ACC2016). IEEE.
   # 3- my website: http://people.tamu.edu/~m.imani88/
   
